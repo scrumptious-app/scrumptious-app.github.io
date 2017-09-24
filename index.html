@@ -28,10 +28,12 @@
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
 
+            // var latitude, longitude = 0.0;
+
             function getLocation() {
                 if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(loadMapScenario);
-                    // loadMapScenario(navigator.geolocation.getCurrentPosition());
+                    navigator.geolocation.getCurrentPosition(showPosition);
+                    // navigator.geolocation.getCurrentPosition(loadMapScenario);
                 }
                 // } else { 
                 //     x.innerHTML = "Geolocation is not supported by this browser.";
@@ -51,6 +53,8 @@ FOOD_BEVERAGE, HOTEL_LODGING, MEDICAL_HEALTH, SHOPPING_RETAIL, TRAVEL_TRANSPORTA
             function showPosition(position) {
                 // x.innerHTML = "Latitude: " + position.coords.latitude + 
                 // "<br>Longitude: " + position.coords.longitude;
+                // latitude = position.coords.latitude;
+                // longitude = position.coords.longitude;
             }
 
             function loadMapScenario(position) {
@@ -96,7 +100,7 @@ FOOD_BEVERAGE, HOTEL_LODGING, MEDICAL_HEALTH, SHOPPING_RETAIL, TRAVEL_TRANSPORTA
                 
             }
 
-            window.onload = getLocation;
+            // window.onload = getLocation;
         </script>
         <script type='text/javascript' src='http://www.bing.com/api/maps/mapcontrol?callback=loadMapScenario' async defer></script>
     </body>
