@@ -1,38 +1,37 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>customizedHeatMapHTML</title>
+        <title>Local Heat Map</title>
         <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
+        <script type="text/javascript" src="https://connect.facebook.net/en_US/sdk.js"></script>
     </head>
     <body>
-        <script>
-          
-        </script>
         <div id='printoutPanel'></div>
         
         <div id='myMap' style='width: 100vw; height: 100vh;'></div>
         <script type='text/javascript'>
             window.fbAsyncInit = function() {
-            FB.init({
-              appId            : '2000750090180739',
-              autoLogAppEvents : true,
-              xfbml            : true,
-              version          : 'v2.10'
-            });
-            FB.AppEvents.logPageView();
-          };
+                FB.init({
+                  appId            : '2000750090180739',
+                  autoLogAppEvents : true,
+                  xfbml            : true,
+                  version          : 'v2.10'
+                });
+                FB.AppEvents.logPageView();
+              };
 
-          (function(d, s, id){
-             var js, fjs = d.getElementsByTagName(s)[0];
-             if (d.getElementById(id)) {return;}
-             js = d.createElement(s); js.id = id;
-             js.src = "//connect.facebook.net/en_US/sdk.js";
-             fjs.parentNode.insertBefore(js, fjs);
-           }(document, 'script', 'facebook-jssdk'));
+            (function(d, s, id){
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {return;}
+                js = d.createElement(s); js.id = id;
+                js.src = "https://connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
 
             function getLocation() {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(loadMapScenario);
+                    // loadMapScenario(navigator.geolocation.getCurrentPosition());
                 }
                 // } else { 
                 //     x.innerHTML = "Geolocation is not supported by this browser.";
