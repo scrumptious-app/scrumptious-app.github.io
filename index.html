@@ -9,11 +9,27 @@
         
         <div id='myMap' style='width: 100vw; height: 100vh;'></div>
         <script type='text/javascript'>
-            function loadMapScenario() {
+
+
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(loadMapScenario);
+                }
+                // } else { 
+                //     x.innerHTML = "Geolocation is not supported by this browser.";
+                // }
+            }
+
+            function showPosition(position) {
+                // x.innerHTML = "Latitude: " + position.coords.latitude + 
+                // "<br>Longitude: " + position.coords.longitude;
+            }
+
+            function loadMapScenario(position) {
                 var map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
-                    credentials: 'Your Bing Maps Key',
-                    center: new Microsoft.Maps.Location(39.393486, -98.100769),
-                    zoom: 3
+                    credentials: 'ApMPiz4KL7I8sfGR8TJpoRB6AeO3xMUq7cdofyut0FXJv0gWXGCiYbxtGypC0sCq',
+                    center: new Microsoft.Maps.Location(position.coords.latitude, position.coords.longitude),
+                    zoom: 16
                 });
                 Microsoft.Maps.loadModule('Microsoft.Maps.HeatMap', function () {
                     // Creating sample Pushpin data within map view
@@ -38,6 +54,8 @@
                 undefined;
                 
             }
+
+            window.onload = getLocation;
         </script>
         <script type='text/javascript' src='http://www.bing.com/api/maps/mapcontrol?callback=loadMapScenario' async defer></script>
     </body>
