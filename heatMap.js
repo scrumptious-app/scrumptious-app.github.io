@@ -24,3 +24,4 @@ Microsoft.Maps.loadModule('Microsoft.Maps.HeatMap', function () {
     map.layers.insert(heatMap);
 });
 undefined;
+

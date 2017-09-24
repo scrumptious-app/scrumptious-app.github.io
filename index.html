@@ -6,7 +6,13 @@
     </head>
     <body>
         <script>
-          window.fbAsyncInit = function() {
+          
+        </script>
+        <div id='printoutPanel'></div>
+        
+        <div id='myMap' style='width: 100vw; height: 100vh;'></div>
+        <script type='text/javascript'>
+            window.fbAsyncInit = function() {
             FB.init({
               appId            : '2000750090180739',
               autoLogAppEvents : true,
@@ -23,12 +29,6 @@
              js.src = "//connect.facebook.net/en_US/sdk.js";
              fjs.parentNode.insertBefore(js, fjs);
            }(document, 'script', 'facebook-jssdk'));
-        </script>
-        <div id='printoutPanel'></div>
-        
-        <div id='myMap' style='width: 100vw; height: 100vh;'></div>
-        <script type='text/javascript'>
-
 
             function getLocation() {
                 if (navigator.geolocation) {
@@ -37,11 +37,17 @@
                 // } else { 
                 //     x.innerHTML = "Geolocation is not supported by this browser.";
                 // }
-                FB.login(function(){
-                  // Note: The call will only work if you accept the permission request
-                  FB.api('/me/feed', 'post', {message: 'Hello, world!'});
-                }, {scope: 'publish_actions'});
+
             }
+
+            
+
+/*
+The place categories to restrict the search results, e.g., ["FOOD_BEVERAGE"]. 
+The available categories are: ARTS_ENTERTAINMENT, EDUCATION, FITNESS_RECREATION, 
+FOOD_BEVERAGE, HOTEL_LODGING, MEDICAL_HEALTH, SHOPPING_RETAIL, TRAVEL_TRANSPORTATION.
+*/
+
 
             function showPosition(position) {
                 // x.innerHTML = "Latitude: " + position.coords.latitude + 
@@ -54,6 +60,18 @@
                     center: new Microsoft.Maps.Location(position.coords.latitude, position.coords.longitude),
                     zoom: 16
                 });
+
+                /* https://graph.facebook.com/search?type=place&center=<lat>,<lon>&distance=1000&access_token=<token> */
+                FB.api({
+                    method: "fql.query",
+                    query: "SELECT page_id, name, description, latitude, longitude, checkin_count, distance(latitude, longitude, '"  
+                    + position.coords.latitude + "', '" + position.coords.longitude + "') FROM place WHERE distance(latitude, longitude, '" + position.coords.latitude + "', '" + position.coords.longitude + "') < '" 
+                    + 1000 +"'" 
+                    },
+                    function(response) {
+
+                    });
+
                 Microsoft.Maps.loadModule('Microsoft.Maps.HeatMap', function () {
                     // Creating sample Pushpin data within map view
                     var mapDiv = map.getRootElement();
