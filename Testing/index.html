@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Local Heat Map</title>
+        <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
+        <script type="text/javascript" src="https://connect.facebook.net/en_US/sdk.js"></script>
+    </head>
+    <body>
+        <div id='printoutPanel'></div>
+        
+        <div id='myMap' style='width: 100vw; height: 100vh;'></div>
+        <script type='text/javascript'>
+        var map, watchId, userPin;
+        var locations = [];
+
+            window.fbAsyncInit = function() {
+                FB.init({
+                  appId            : '2000750090180739',
+                  autoLogAppEvents : true,
+                  xfbml            : true,
+                  version          : 'v2.10'
+                });
+                FB.AppEvents.logPageView();
+              };
+
+            (function(d, s, id){
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {return;}
+                js = d.createElement(s); js.id = id;
+                js.src = "https://connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+
+            // var latitude, longitude = 0.0;
+
+            function GetMap()
+            {
+                map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
+                    credentials: 'ApMPiz4KL7I8sfGR8TJpoRB6AeO3xMUq7cdofyut0FXJv0gWXGCiYbxtGypC0sCq',
+                    // center: new Microsoft.Maps.Location(position.coords.latitude, position.coords.longitude),
+                    zoom: 16
+                });
+            }
+
+            function StartTracking() {
+                //Add a pushpin to show the user's location.
+                userPin = new Microsoft.Maps.Pushpin(map.getCenter(), { visible: false });
+                // map.entities.push(gpsPin);
+                map.entities.push(userPin);
+
+                //Watch the users location.
+                watchId = navigator.geolocation.watchPosition(UsersLocationUpdated);
+
+                //Request the user's location
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var loc = new Microsoft.Maps.Location(
+                        position.coords.latitude,
+                        position.coords.longitude);
+
+                    FB.api({
+                    method: "fql.query",
+                    query: "SELECT page_id, name, description, latitude, longitude, checkin_count, distance(latitude, longitude, '"  
+                    + position.coords.latitude + "', '" + position.coords.longitude + "') FROM place WHERE distance(latitude, longitude, '" + position.coords.latitude + "', '" + position.coords.longitude + "') < '" 
+                    + 1000 +"'" 
+                    },
+                    function(response) {
+                        console.log(response);
+                    });
+
+                    //Add a pushpin at the user's location.
+                    // var pin = new Microsoft.Maps.Pushpin(loc);
+                    // map.entities.push(pin);
+
+                    //Center the map on the user's location.
+                    // map.setView({ center: loc, zoom: 15 });
+                });
+
+                
+
+                Microsoft.Maps.loadModule('Microsoft.Maps.HeatMap', function () {
+                    // Creating sample Pushpin data within map view
+                    var mapDiv = map.getRootElement();
+                    var locations = [];
+                    for (var i = 0; i < 1000; i++) {
+                        // locations.push(map.tryPixelToLocation(new Microsoft.Maps.Point(mapDiv.clientWidth * Math.random(), mapDiv.clientHeight * Math.random()), Microsoft.Maps.PixelReference.control));
+                        locations.push(map.getCenter())
+                    }
+                    var heatMap = new Microsoft.Maps.HeatMapLayer(locations, {
+                        intensity: 0.65,
+                        radius: 10,
+                        colorGradient: {
+                            '0': 'Black',
+                            '0.4': 'Purple',
+                            '0.6': 'Red',
+                            '0.8': 'Yellow',
+                            '1': 'White'
+                        }
+                    });
+                    map.layers.insert(heatMap);
+                });
+            }
+
+            function UsersLocationUpdated(position) {
+                var loc = new Microsoft.Maps.Location(
+                            position.coords.latitude,
+                            position.coords.longitude);
+
+                //Update the user pushpin.
+                userPin.setLocation(loc);
+                userPin.setOptions({ visible: true });
+
+                //Center the map on the user's location.
+                map.setView({ center: loc });
+            }
+
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(loadMapScenario);
+                    // navigator.geolocation.getCurrentPosition(loadMapScenario);
+                }
+                // } else { 
+                //     x.innerHTML = "Geolocation is not supported by this browser.";
+                // }
+
+            }
+
+            
+
+/*
+The place categories to restrict the search results, e.g., ["FOOD_BEVERAGE"]. 
+The available categories are: ARTS_ENTERTAINMENT, EDUCATION, FITNESS_RECREATION, 
+FOOD_BEVERAGE, HOTEL_LODGING, MEDICAL_HEALTH, SHOPPING_RETAIL, TRAVEL_TRANSPORTATION.
+*/
+
+
+            function showPosition(position) {
+                // x.innerHTML = "Latitude: " + position.coords.latitude + 
+                // "<br>Longitude: " + position.coords.longitude;
+                // latitude = position.coords.latitude;
+                // longitude = position.coords.longitude;
+            }
+
+            function loadMapScenario(position) {
+                print(typeof(position))
+                var map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
+                    credentials: 'ApMPiz4KL7I8sfGR8TJpoRB6AeO3xMUq7cdofyut0FXJv0gWXGCiYbxtGypC0sCq',
+                    center: new Microsoft.Maps.Location(position.coords.latitude, position.coords.longitude),
+                    zoom: 16
+                });
+
+                /* https://graph.facebook.com/search?type=place&center=<lat>,<lon>&distance=1000&access_token=<token> */
+                FB.api({
+                    method: "fql.query",
+                    query: "SELECT page_id, name, description, latitude, longitude, checkin_count, distance(latitude, longitude, '"  
+                    + position.coords.latitude + "', '" + position.coords.longitude + "') FROM place WHERE distance(latitude, longitude, '" + position.coords.latitude + "', '" + position.coords.longitude + "') < '" 
+                    + 1000 +"'" 
+                    },
+                    function(response) {
+
+                    });
+
+                Microsoft.Maps.loadModule('Microsoft.Maps.HeatMap', function () {
+                    // Creating sample Pushpin data within map view
+                    var mapDiv = map.getRootElement();
+                    var locations = [];
+                    for (var i = 0; i < 1000; i++) {
+                        // locations.push(map.tryPixelToLocation(new Microsoft.Maps.Point(mapDiv.clientWidth * Math.random(), mapDiv.clientHeight * Math.random()), Microsoft.Maps.PixelReference.control));
+                        locations.push(map.getCenter())
+                    }
+                    var heatMap = new Microsoft.Maps.HeatMapLayer(locations, {
+                        intensity: 0.65,
+                        radius: 10,
+                        colorGradient: {
+                            '0': 'Black',
+                            '0.4': 'Purple',
+                            '0.6': 'Red',
+                            '0.8': 'Yellow',
+                            '1': 'White'
+                        }
+                    });
+                    map.layers.insert(heatMap);
+                });
+                undefined;
+                
+            }
+
+            // window.onload = getLocation;
+            window.onload = StartTracking;
+        </script>
+        <script type='text/javascript' src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap' async defer></script>
+    </body>
+</html>
