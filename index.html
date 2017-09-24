@@ -36,7 +36,8 @@
                     var mapDiv = map.getRootElement();
                     var locations = [];
                     for (var i = 0; i < 1000; i++) {
-                        locations.push(map.tryPixelToLocation(new Microsoft.Maps.Point(mapDiv.clientWidth * Math.random(), mapDiv.clientHeight * Math.random()), Microsoft.Maps.PixelReference.control));
+                        // locations.push(map.tryPixelToLocation(new Microsoft.Maps.Point(mapDiv.clientWidth * Math.random(), mapDiv.clientHeight * Math.random()), Microsoft.Maps.PixelReference.control));
+                        locations.push(map.getCenter())
                     }
                     var heatMap = new Microsoft.Maps.HeatMapLayer(locations, {
                         intensity: 0.65,
